@@ -69,7 +69,7 @@ def page_home():
         st.write("")
         st.write("")
         st.write("")
-        image = Image.open('image1.png')
+        image = Image.open('image2.png')
         st.image(image  )
         st.write('')  
 
