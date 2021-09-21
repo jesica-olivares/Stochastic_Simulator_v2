@@ -1,15 +1,3 @@
-# # new_app1.py
-# import streamlit as st
-# #from multiapp import MultiApp
-# from multipage import MultiPage
-# def foo():
-#     st.title("Hello Foo")
-# def bar():
-#     st.title("Hello Bar")
-# app = MultiApp()
-# app.add_app("Foo", foo)
-# app.add_app("Bar", bar)
-# app.run()
 
 import streamlit as st
 import pandas as pd
