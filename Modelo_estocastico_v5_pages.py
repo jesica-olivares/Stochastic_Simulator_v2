@@ -51,20 +51,27 @@ def main():
 
 def page_home():
 
-    st.title("Mejora de Productividad Molienda - Flotación")
-    st.write(f"""
-    # Explicación
-    ## Detalle
-    
+    st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
+    col111, col112, col113 = st.beta_columns((8,1,10))
+    with col111:
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write(f"""
+    Muchas estrategias de control disponibles están asociadas a mejoras individuales para la Flotación o para la Molienda y muy pocas se ocupan de la interrelación entre la Molienda y la Flotación en búsqueda de un óptimo global.   Se presenta una metodología para evaluar diferentes estrategias de control con foco en la disminución de la dispersión del grado de liberación que puede provocar pérdidas de recuperación significativas. El método se apoya en mediciones del P80 históricas en planta, generando un modelo estadístico que representa los datos de planta. Paralelamente hace uso de una curva P80 versus Recuperación de laboratorio y el método Montecarlo para evaluar el impacto en la recuperación de diferentes distribuciones de P80 generadas por diferentes estrategias de control.    
     """)
-
+    with col113:
+        image = Image.open('image1.png')
+        st.image(image  )
+        st.write('')  
 
 def page_model():
 
     col11, col12, col13 = st.beta_columns((1,10,1))
 
     with col12:
-        st.title("Grinding and flotation optimization")
+        st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
+        st.write("")
     
     col21, col22, col23 = st.beta_columns((1,1,1))
     with col22:
@@ -145,8 +152,6 @@ def page_model():
     min_graph=round(p80_min*0.8)
 
     f = CubicSpline(x, y, bc_type='natural')
-    x_new = np.linspace(0, max_graph, 100)
-    y_new = f(x_new)
 
     prob=random.random()
     norm.ppf(prob,loc=average_p80,scale=std_p80)
@@ -179,11 +184,31 @@ def page_model():
         #'midnightblue'
         color2="#C94F7E"
         #'purple'
+        
+        x1_min=df_test["p80"].iloc[0]
+        slope_1=f(x1_min,1)
+        c_1=df_test["Recovery"].iloc[0]-slope_1*x1_min
+        x0_1=-c_1/slope_1
+        x_new_1=np.linspace(0,x1_min-1, 100)
+        y_new_1=x_new_1 *slope_1+c_1
+
+        x2_max=df_test["p80"].iloc[-1]
+        slope_2=f(x2_max,1)
+        c_2=df_test["Recovery"].iloc[-1]-slope_2*x2_max
+        x0_2=-c_2/slope_2
+        x_new_2=np.linspace(x2_max+1, x0_2, 100)
+        y_new_2=x_new_2 *slope_2+c_2
+
+        x_new = np.linspace(x1_min, x2_max, 100)
+        y_new = f(x_new)
+        
         plt.rcParams.update({'font.size': 16})
         fig1, ax = plt.subplots(figsize=(12,8))
         ax2=ax.twinx()
         plt.grid(True, axis='y',linewidth=0.2, color='gray', linestyle='-')
         ax.fill_between(x_new, y_new,alpha=0.1,color=color1,linewidth=2)
+        ax.fill_between(x_new_1, y_new_1,alpha=0.1,color=color1,linewidth=2)
+        ax.fill_between(x_new_2, y_new_2,alpha=0.1,color=color1,linewidth=2)
         ax.plot(x_new, y_new,linewidth =2, color=color1, alpha=.8)
         ax.plot(x, y, 'o', color=color1)
         ax.set_ylabel("Recovery", color = color1)
@@ -198,6 +223,8 @@ def page_model():
         ax.spines['bottom'].set_linewidth('0.3') 
         ax.spines['left'].set_linewidth('0.3') 
         ax.set_ylim([0,100])
+        ax.plot(x_new_1, y_new_1,color=color1,linewidth=2)
+        ax.plot(x_new_2, y_new_2,color=color1,linewidth=2)
         ax2=sns.histplot(df_rand,x='Simulated_p80_check', bins=20, color=color2,)
         ax2.set_ylabel("Count", color = color2)
         plt.title('Curva Recuperación versus P80',fontsize=22)
