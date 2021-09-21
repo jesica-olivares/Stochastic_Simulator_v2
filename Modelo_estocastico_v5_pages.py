@@ -65,7 +65,10 @@ def page_home():
         st.write(f"""
     Muchas estrategias de control disponibles están asociadas a mejoras individuales para la Flotación o para la Molienda y muy pocas se ocupan de la interrelación entre la Molienda y la Flotación en búsqueda de un óptimo global.   Se presenta una metodología para evaluar diferentes estrategias de control con foco en la disminución de la dispersión del grado de liberación que puede provocar pérdidas de recuperación significativas. El método se apoya en mediciones del P80 históricas en planta, generando un modelo estadístico que representa los datos de planta. Paralelamente hace uso de una curva P80 versus Recuperación de laboratorio y el método Montecarlo para evaluar el impacto en la recuperación de diferentes distribuciones de P80 generadas por diferentes estrategias de control.    
     """)
-    with col113:
+    with col113:        
+        st.write("")
+        st.write("")
+        st.write("")
         image = Image.open('image1.png')
         st.image(image  )
         st.write('')  
@@ -236,7 +239,7 @@ def page_model():
         ax.plot(x_new_2, y_new_2,color=color1,linewidth=2)
         ax2=sns.histplot(df_rand,x='Simulated_p80_check', bins=20, color=color2,)
         ax2.set_ylabel("Count", color = color2)
-        plt.title('Curva Recuperación versus P80',fontsize=22)
+        #plt.title('Curva Recuperación versus P80',fontsize=22)
         st.pyplot(fig1)
 
         metric("Simulated Recovery", simul_recovery,)
