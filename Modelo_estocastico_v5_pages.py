@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -61,10 +60,14 @@ def page_home():
 
 
 def page_model():
-    col11, col12, col13 = st.beta_columns((1,4,1))
+
+    col11, col12, col13 = st.beta_columns((1,6,1))
 
     with col12:
         st.title("Grinding and flotation optimization")
+    
+    col21, col22, col23 = st.beta_columns((1,2,1))
+    with col22:
         average_p80 =st.number_input("Average P80",min_value=35,max_value=300,value=200)
         std_p80 =st.number_input("Standard Deviation P80",min_value=1,value=15)
         simul_number =st.number_input("Number of Simulations",min_value=1,value=1000,)
@@ -99,11 +102,13 @@ def page_model():
             globals()['val_p80_%s' % j]=round(120*(0.8*(j)/middle_node_c))
 
 
-    #generamos 3 columnas
-    col21, col22, col23, col24 = st.beta_columns((3,1,1,1))
-
-    with col23:
+    col31, col32 = st.beta_columns((1,1))
+    with col32:
         st.header('Tabla de Recuperación versus P80')
+    #generamos 3 columnas
+    col41, col42, col43, col44 = st.beta_columns((3,1,1,1))
+
+    with col43:
         i=0
         st.write('')
         #with st.form('Form1'):
@@ -113,7 +118,7 @@ def page_model():
         
             #submitted1 = st.form_submit_button('Submit 1')
 
-    with col24:
+    with col44:
         
         st.write('')
         i=0
@@ -165,7 +170,7 @@ def page_model():
     simul_recovery=round(simul_recovery,2)
 
 
-    with col21:
+    with col41:
         st.subheader('')
         color1= "#002A54"
         #'midnightblue'
