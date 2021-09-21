@@ -66,7 +66,7 @@ def page_model():
     with col12:
         st.title("Grinding and flotation optimization")
     
-    col21, col22, col23 = st.beta_columns((2,1,2))
+    col21, col22, col23 = st.beta_columns((1,1,1))
     with col22:
         average_p80 =st.number_input("Average P80",min_value=35,max_value=300,value=200)
         std_p80 =st.number_input("Standard Deviation P80",min_value=1,value=15)
@@ -104,10 +104,10 @@ def page_model():
 
     col31, col32, col33 = st.beta_columns((4,1,4))
     with col31:
-        st.header('Gráfico de Recuperación versus P80')
+        st.subheader('Gráfico de Recuperación versus P80')
     #generamos 3 columnas
     with col33:
-        st.header('Tabla de Recuperación versus P80')
+        st.subheader('Tabla de Recuperación versus P80')
     #generamos 3 columnas
     col41, col42, col43, col44 = st.beta_columns((3,1,1,1))
 
