@@ -50,8 +50,13 @@ def main():
 
 
 def page_home():
-
-    st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
+    col1111, col1112, col1113 = st.beta_columns((1,8,1.5))
+    with col1113:
+        image = Image.open('FLS1.jpg')
+        st.image(image  , caption='FLSmidth')
+        st.write('')  
+    with col1112:
+        st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
     col111, col112, col113 = st.beta_columns((8,1,10))
     with col111:
         st.write("")
@@ -67,11 +72,15 @@ def page_home():
 
 def page_model():
 
-    col11, col12, col13 = st.beta_columns((1,10,1))
+    col11, col12, col13 = st.beta_columns((1,8,1.5))
 
     with col12:
         st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
         st.write("")
+    with col13:
+        image = Image.open('FLS1.jpg')
+        st.image(image  , caption='FLSmidth')
+        st.write('')  
     
     col21, col22, col23 = st.beta_columns((1,1,1))
     with col22:
