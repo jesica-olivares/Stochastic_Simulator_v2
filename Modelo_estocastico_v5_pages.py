@@ -164,7 +164,21 @@ def page_model():
     min_graph=round(p80_min*0.8)
 
     f = CubicSpline(x, y, bc_type='natural')
+    
+    x1_min=df_test["p80"].iloc[0]
+    slope_1=f(x1_min,1)
+    c_1=df_test["Recovery"].iloc[0]-slope_1*x1_min
+    x0_1=-c_1/slope_1
+    x_new_1=np.linspace(0,x1_min-1, 100)
+    y_new_1=x_new_1 *slope_1+c_1
 
+    x2_max=df_test["p80"].iloc[-1]
+    slope_2=f(x2_max,1)
+    c_2=df_test["Recovery"].iloc[-1]-slope_2*x2_max
+    x0_2=-c_2/slope_2
+    x_new_2=np.linspace(x2_max+1, x0_2, 100)
+    y_new_2=x_new_2 *slope_2+c_2
+    
     prob=random.random()
     norm.ppf(prob,loc=average_p80,scale=std_p80)
     df_rand= pd.DataFrame(np.random.random(size=(simul_number, 1)), columns=['random'])
@@ -173,7 +187,7 @@ def page_model():
     def check(row):
         if row['Simulated_p80']<35: 
             val=np.nan
-        elif row['Simulated_p80']>300: 
+        elif row['Simulated_p80']>x0_2: 
             val=np.nan
         else: 
             val=row['Simulated_p80']
@@ -196,20 +210,6 @@ def page_model():
         #'midnightblue'
         color2="#C94F7E"
         #'purple'
-        
-        x1_min=df_test["p80"].iloc[0]
-        slope_1=f(x1_min,1)
-        c_1=df_test["Recovery"].iloc[0]-slope_1*x1_min
-        x0_1=-c_1/slope_1
-        x_new_1=np.linspace(0,x1_min-1, 100)
-        y_new_1=x_new_1 *slope_1+c_1
-
-        x2_max=df_test["p80"].iloc[-1]
-        slope_2=f(x2_max,1)
-        c_2=df_test["Recovery"].iloc[-1]-slope_2*x2_max
-        x0_2=-c_2/slope_2
-        x_new_2=np.linspace(x2_max+1, x0_2, 100)
-        y_new_2=x_new_2 *slope_2+c_2
 
         x_new = np.linspace(x1_min, x2_max, 100)
         y_new = f(x_new)
@@ -243,6 +243,52 @@ def page_model():
         st.pyplot(fig1)
 
         metric("Simulated Recovery", simul_recovery,)
+        
+        import base64
+        def create_download_link(val, filename):
+            b64 = base64.b64encode(val)  # val looks like b'...'
+            return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.pdf">Download file</a>'
+
+        export_as_pdf = st.button("Export Report")
+        if export_as_pdf:
+            pdf = FPDF(orientation = 'P', unit = 'mm', format = 'A4')
+            pdf.add_page()
+            pdf.set_font('Arial', 'B', 16)
+            pdf.image('C:/Users/jeoli-cl/OneDrive - FLSmidth/Analisis_Datos/Modelo Estocastico/FLS1.jpg', x = 180, y = 0, w = 30, h = 30)
+            title="Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación"
+            intro="    Muchas estrategias de control disponibles están asociadas a mejoras individuales para la Flotación o para la Molienda y muy pocas se ocupan de la interrelación entre la Molienda y la Flotación en búsqueda de un óptimo global.   Se presenta una metodología para evaluar diferentes estrategias de control con foco en la disminución de la dispersión del grado de liberación que puede provocar pérdidas de recuperación significativas. El método se apoya en mediciones del P80 históricas en planta, generando un modelo estadístico que representa los datos de planta. Paralelamente hace uso de una curva P80 versus Recuperación de laboratorio y el método Montecarlo para evaluar el impacto en la recuperación de diferentes distribuciones de P80 generadas por diferentes estrategias de control.    "
+            pdf.multi_cell(w= 150, h= 7, txt= title, border = 0, align="J", fill='False')
+            #pdf.cell(40, 10, title)
+            pdf.set_font('Arial','', 12)
+            pdf.ln(h = '')
+            pdf.ln(h = '')
+            pdf.ln(h = '')
+            pdf.ln(h = '')
+            #pdf.cell(60,23, intro,0, 1, 'C')
+            pdf.multi_cell(w= 0, h= 8, txt= intro, border = 1, align="J", fill='False')
+            #,str = 'J',bool = False)
+            #pdf.text(2, 25,intro)
+            fig1.savefig("fig1.jpg")
+            pdf.image("image2.png", x = 50, y = 140, w = 130, h = 90)
+            pdf.add_page()
+            pdf.set_font('Arial', 'B', 16)
+            pdf.image('FLS1.jpg', x = 180, y = 0, w = 30, h = 30)
+            pdf.multi_cell(w= 150, h= 7, txt= title, border = 0, align="J", fill='False')
+            pdf.image("fig1.jpg", x = 50, y = 140, w = 130, h = 90)
+            pdf.set_font('Arial','', 12)
+            pdf.text(50, 40, f"Average P80: {str(average_p80)}")
+            pdf.text(50, 50, f"Standard Deviation P80: {str(std_p80)}")
+            pdf.text(50, 60, f"Number of Simulations: {str(simul_number)}")
+            pdf.text(50, 70, f"Number of Nodes: {str(node_number)}")
+            
+
+
+            #pdf.text(5,20,)
+            #pdf.output('C:/Users/jeoli-cl/OneDrive - FLSmidth/Analisis_Datos/Modelo Estocastico/Automated PDF Report.pdf')
+            html = create_download_link(pdf.output(dest="S").encode("latin-1"), "test")
+
+            st.markdown(html, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
