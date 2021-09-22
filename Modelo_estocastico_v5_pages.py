@@ -17,6 +17,8 @@ from st_aggrid import AgGrid, DataReturnMode, GridUpdateMode, GridOptionsBuilder
 
 from PIL import Image
 
+from fpdf import FPDF
+
 st.set_page_config(layout="wide")   
 
 
