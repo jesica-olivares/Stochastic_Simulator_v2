@@ -121,14 +121,14 @@ def page_model():
             globals()['val_p80_%s' % j]=round(120*(0.8*(j)/middle_node_c))
 
 
-    col31, col32, col33 = st.beta_columns((4,1,4))
-    with col31:
+    col31, col32, col33, col34, col35 = st.beta_columns((1,4,2,4,1))
+    with col32:
         st.subheader('Gráfico de Recuperación versus P80')
     #generamos 3 columnas
-    with col33:
+    with col34:
         st.subheader('Tabla de Recuperación versus P80')
     #generamos 3 columnas
-    col41, col42, col43, col44 = st.beta_columns((3,1,1,1))
+    col41, col42, col43, col44 = st.beta_columns((4,1,2,2))
 
     with col43:
         i=0
