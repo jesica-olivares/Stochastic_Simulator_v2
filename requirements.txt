@@ -1,10 +1,11 @@
-pandas==1.2.4
+seaborn==0.11.1
 matplotlib==3.3.4
+numpy==1.19.5
 altair==4.1.0
+fpdf==1.7.2
+streamlit==0.84.1
 streamlit_metrics==0.1.0
 scipy==1.6.3
-streamlit==0.84.1
-seaborn==0.11.1
-numpy==1.19.5
 streamlit_aggrid==0.2.1
+pandas==1.2.4
 Pillow==8.3.2
