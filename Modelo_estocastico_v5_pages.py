@@ -256,7 +256,7 @@ def page_model():
             pdf = FPDF(orientation = 'P', unit = 'mm', format = 'A4')
             pdf.add_page()
             pdf.set_font('Arial', 'B', 16)
-            pdf.image('C:/Users/jeoli-cl/OneDrive - FLSmidth/Analisis_Datos/Modelo Estocastico/FLS1.jpg', x = 180, y = 0, w = 30, h = 30)
+            pdf.image('FLS1.jpg', x = 180, y = 0, w = 30, h = 30)
             title="Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación"
             intro="    Muchas estrategias de control disponibles están asociadas a mejoras individuales para la Flotación o para la Molienda y muy pocas se ocupan de la interrelación entre la Molienda y la Flotación en búsqueda de un óptimo global.   Se presenta una metodología para evaluar diferentes estrategias de control con foco en la disminución de la dispersión del grado de liberación que puede provocar pérdidas de recuperación significativas. El método se apoya en mediciones del P80 históricas en planta, generando un modelo estadístico que representa los datos de planta. Paralelamente hace uso de una curva P80 versus Recuperación de laboratorio y el método Montecarlo para evaluar el impacto en la recuperación de diferentes distribuciones de P80 generadas por diferentes estrategias de control.    "
             pdf.multi_cell(w= 150, h= 7, txt= title, border = 0, align="J", fill='False')
@@ -283,10 +283,6 @@ def page_model():
             pdf.text(50, 60, f"Number of Simulations: {str(simul_number)}")
             pdf.text(50, 70, f"Number of Nodes: {str(node_number)}")
             
-
-
-            #pdf.text(5,20,)
-            #pdf.output('C:/Users/jeoli-cl/OneDrive - FLSmidth/Analisis_Datos/Modelo Estocastico/Automated PDF Report.pdf')
             html = create_download_link(pdf.output(dest="S").encode("latin-1"), "test")
 
             st.markdown(html, unsafe_allow_html=True)
