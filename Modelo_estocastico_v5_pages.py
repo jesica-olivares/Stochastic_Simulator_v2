@@ -77,7 +77,7 @@ def page_home():
 
 def page_model():
 
-    col11, col12, col13 = st.beta_columns((1,8,1.5))
+    col11, col12, col13 = st.columns((1,8,1.5))
 
     with col12:
         st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
@@ -86,19 +86,37 @@ def page_model():
         image = Image.open('FLS1.jpg')
         st.image(image  , caption='FLSmidth')
         st.write('')  
+        
+    col111, col112, col113, col114, col115 = st.columns((1,2,2,2,1))
+    with col113:
+        global file_template
+        file_template=st.file_uploader("Upload File")
+        st.write('')
+        st.write('')
+        st.write('')
     
-    col21, col22, col23 = st.beta_columns((1,1,1))
+    col21, col22, col23 = st.columns((1,1,1))
     with col22:
-        average_p80 =st.number_input("Average P80",min_value=35,max_value=300,value=200)
-        std_p80 =st.number_input("Standard Deviation P80",min_value=1,value=15)
-        simul_number =st.number_input("Number of Simulations",min_value=1,value=1000,)
-        node_number =int(st.selectbox("Number of Nodes",
-                ("3", "4", "5","6","7","8")))
+        if (file_template is not None):
+            file_template.seek(0)
+            df_upload=pd.read_csv(file_template, sep=";",)
+            average_p80_val =int(df_upload.iloc[0]["Average_p80"])
+            std_p80_val =int(df_upload.iloc[0]["Standard_deviation_p80"])
+            simul_number_val =int(df_upload.iloc[0]["Number_simulations"])
+            node_number_val =int(df_upload.iloc[0]["Number_nodes"])
 
+        else:
+            average_p80_val =200
+            std_p80_val= 15
+            simul_number_val =1000
+            node_number_val =3
+
+        average_p80 =st.number_input("Average P80",min_value=35,max_value=300,value=average_p80_val)
+        std_p80 =st.number_input("Standard Deviation P80",min_value=1,value=std_p80_val)
+        simul_number =st.number_input("Number of Simulations",min_value=1,value=simul_number_val,)
+        node_number =st.number_input("Number of Nodes",min_value=3,max_value=8,value=node_number_val)
     st.write('')
     st.write('')
-
-
 
     node_max=node_number-1
     middle_node_f=math.floor(node_max/2)
@@ -123,7 +141,7 @@ def page_model():
             globals()['val_p80_%s' % j]=round(120*(0.8*(j)/middle_node_c))
 
 
-    col31, col32, col33, col34, col35 = st.beta_columns((1,4,2,4,1))
+    col31, col32, col33, col34, col35 = st.columns((1,4,2,4,1))
     with col32:
         st.subheader('Gráfico de Recuperación versus P80')
     #generamos 3 columnas
@@ -133,23 +151,30 @@ def page_model():
     col41, col42, col43, col44 = st.beta_columns((4,1,2,2))
 
     with col43:
-        i=0
         st.write('')
-        #with st.form('Form1'):
-        for i in range(node_number):
-            j=i+1
-            globals()['p80%s' % j] =st.number_input(f"P80 {j}",max_value=300,value=globals()['val_p80_%s' % j])
-        
-            #submitted1 = st.form_submit_button('Submit 1')
+        if (file_template is not None):
+            for i in range(node_number):
+                j=i+1
+                globals()['p80%s' % j] = st.number_input(f"P80 {j}",max_value=300,value=int(df_upload.iloc[i]["p80"]))
+        else:
+            i=0
+            #with st.form('Form1'):
+            for i in range(node_number):
+                j=i+1
+                globals()['p80%s' % j] =st.number_input(f"P80 {j}",max_value=300,value=globals()['val_p80_%s' % j])
 
     with col44:
-        
         st.write('')
-        i=0
-        for i in range(node_number):
-            j=i+1
-            globals()['rec%s' % j]  =st.number_input(f"Recovery {j}",min_value=0,max_value=100,value=globals()['val_rec_%s' % j])
-
+        if (file_template is not None):
+            for i in range(node_number):
+                j=i+1
+                globals()['rec%s' % j] = st.number_input(f"Recovery {j}",min_value=0,max_value=100,value=int(df_upload.iloc[i]["Recovery"]))
+        else:
+            i=0
+            for i in range(node_number):
+                j=i+1
+                globals()['rec%s' % j]  =st.number_input(f"Recovery {j}",min_value=0,max_value=100,value=globals()['val_rec_%s' % j])
+        
     data=[]
     for i in range(node_number):
         j=i+1
@@ -199,12 +224,8 @@ def page_model():
     df_rand['Simulated_p80_check']=df_rand.apply(check, axis=1) 
     df_rand["recovery"]=df_rand['Simulated_p80_check'].apply(f)
 
-
-
-
     simul_recovery=df_rand[df_rand["recovery"]>0]["recovery"].mean()
     simul_recovery=round(simul_recovery,2)
-
 
     with col41:
         st.subheader('')
@@ -245,7 +266,33 @@ def page_model():
         st.pyplot(fig1)
 
         metric("Simulated Recovery", simul_recovery,)
-        
+    def convert_df(df):
+        return df.to_csv(sep=";",index=False).encode('latin-1')
+    
+
+    with col43:
+        st.write('')
+        st.write('')
+        column_names=['Average_p80', 'Standard_deviation_p80', 'Number_simulations',
+       'Number_nodes', 'p80', 'Recovery']
+        df_donwload =df_test.copy()
+        listofzeros_av=['']*(node_number-1)
+        listofzeros_av.insert(0,average_p80)
+        listofzeros_st=['']*(node_number-1)
+        listofzeros_st.insert(0,std_p80)
+        listofzeros_sim=['']*(node_number-1)
+        listofzeros_sim.insert(0,simul_number)
+        listofzeros_nod=['']*(node_number-1)
+        listofzeros_nod.insert(0,node_number)
+        df_donwload.insert(loc=0, column='Number_nodes',value=listofzeros_nod)
+        df_donwload.insert(loc=0, column='Number_simulations',value=listofzeros_sim)
+        df_donwload.insert(loc=0, column='Standard_deviation_p80',value=listofzeros_st)
+        df_donwload.insert(loc=0, column='Average_p80',value=listofzeros_av)
+
+        csv=convert_df(df_donwload)
+        file_download=st.download_button("Template File", data=csv, file_name="template.csv")
+
+    with col41:
         import base64
         def create_download_link(val, filename):
             b64 = base64.b64encode(val)  # val looks like b'...'
