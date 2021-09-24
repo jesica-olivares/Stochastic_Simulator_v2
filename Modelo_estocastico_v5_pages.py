@@ -52,14 +52,14 @@ def main():
 
 
 def page_home():
-    col1111, col1112, col1113 = st.beta_columns((1,8,1.5))
+    col1111, col1112, col1113 = st.columns((1,8,1.5))
     with col1113:
         image = Image.open('FLS1.jpg')
         st.image(image  , caption='FLSmidth')
         st.write('')  
     with col1112:
         st.title("Evaluación de Estrategias de Mejora de Productividad Molienda-Flotación")
-    col111, col112, col113 = st.beta_columns((8,1,10))
+    col111, col112, col113 = st.columns((8,1,10))
     with col111:
         st.write("")
         st.write("")
@@ -148,7 +148,7 @@ def page_model():
     with col34:
         st.subheader('Tabla de Recuperación versus P80')
     #generamos 3 columnas
-    col41, col42, col43, col44 = st.beta_columns((4,1,2,2))
+    col41, col42, col43, col44 = st.columns((4,1,2,2))
 
     with col43:
         st.write('')
