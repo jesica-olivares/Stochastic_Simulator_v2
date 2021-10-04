@@ -323,12 +323,22 @@ def page_model():
             pdf.set_font('Arial', 'B', 16)
             pdf.image('FLS1.jpg', x = 180, y = 0, w = 30, h = 30)
             pdf.multi_cell(w= 150, h= 7, txt= title, border = 0, align="J", fill='False')
-            pdf.image("fig1.jpg", x = 50, y = 140, w = 130, h = 90)
             pdf.set_font('Arial','', 12)
-            pdf.text(50, 40, f"Average P80: {str(average_p80)}")
-            pdf.text(50, 50, f"Standard Deviation P80: {str(std_p80)}")
-            pdf.text(50, 60, f"Number of Simulations: {str(simul_number)}")
-            pdf.text(50, 70, f"Number of Nodes: {str(node_number)}")
+            pdf.text(20, 40, f"Parameters")
+            pdf.text(50, 50, f"Average P80: {str(average_p80)}")
+            pdf.text(50, 60, f"Standard Deviation P80: {str(std_p80)}")
+            pdf.text(50, 70, f"Number of Simulations: {str(simul_number)}")
+            pdf.text(50, 80, f"Number of Nodes: {str(node_number)}")
+            
+            pdf.text(20, 95, f"Tabla de Recuperación vs P80")
+            pdf.set_font('Arial','', 10)
+            for i in range(node_number):
+                j=i+1
+                pdf.text(50, 100+j*7, f"P80 {j}: {str(globals()['p80%s' % j])}  |  Recovery {j}: {str(globals()['rec%s' % j])}")
+                
+            pdf.image("fig1.jpg", x = 40, y = 160, w = 130, h = 90)
+            pdf.set_font('Arial','b', 16)
+            pdf.text(60, 260, f"Simulated Recovery: {str(simul_recovery)}")
             
             html = create_download_link(pdf.output(dest="S").encode("latin-1"), "test")
 
