@@ -159,9 +159,16 @@ def page_model():
         else:
             i=0
             #with st.form('Form1'):
-            for i in range(node_number):
-                j=i+1
-                globals()['p80%s' % j] =st.number_input(f"P80 {j}",max_value=300,value=globals()['val_p80_%s' % j])
+            try:
+                for i in range(node_number):
+                    j=i+1
+                    if i==0:
+                        globals()['p80%s' % j] =st.number_input(f"P80 {j}",max_value=300,value=globals()['val_p80_%s' % j])
+                    else:
+                        globals()['p80%s' % j] =st.number_input(f"P80 {j}",max_value=300,min_value=int(globals()['p80%s' % i]+1),value=globals()['val_p80_%s' % j])
+            except:
+                st.error("Valor de p80 debe ser menor al siguiente")
+                st.stop()
 
     with col44:
         st.write('')
